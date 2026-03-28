@@ -1,0 +1,153 @@
+<!DOCTYPE html>     
+<html lang="en">        
+<head>            
+    <meta charset="UTF-8">            
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">            
+    <title>Technical Documentation</title>            
+    <link rel="stylesheet" href="Technical-documentation.css">
+</head>
+<body>
+    <nav id="navbar">
+        <header>
+            <h2>Dockerizing a Simple App</h2>
+        </header>
+        <ul>
+            <li><a class="nav-link" href="#introduction">Introduction</a></li>
+            <li><a class="nav-link" href="#project-structure">Project Structure</a></li>
+            <li><a class="nav-link" href="#creating-a-dockerfile">Creating a Dockerfile</a></li>
+            <li><a class="nav-link" href="#running-the-container">Running the Container</a></li>
+            <li><a class="nav-link" href="#troubleshooting-&-common-commands">Troubleshooting & Common Commands</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1>Dockerizing a Simple App</h1>
+    </header>
+<main id="main-doc">
+    <section class="main-section" id="introduction">
+        <header><h2>
+Introduction
+        </h2></header>
+        <p>In the world of modern software development, the phrase 
+            "it works on my machine" is a common hurdle. 
+            Docker solves this by using containerization technology 
+            to package an application and all its 
+            dependencies—libraries, 
+            configuration files, and runtime—into a single, 
+            standardized unit called a container.</p>
+            <p>This documentation provides a comprehensive walkthrough for "Dockerizing"
+                 a simple web application. 
+                 By the end of this guide, 
+                 you will understand how to move away from 
+                 manual environment setups and toward a portable, 
+                 scalable, and isolated infrastructure.</p>
+                 <h3>Learning Objectives </h3>
+                 <p>By the end of this guide, you will be able to:</p>
+                 <ul>
+                     <li>Understand the basics of Docker and containerization</li>
+                     <li>Create a Dockerfile for a simple web application</li>
+                     <li>Build and run a Docker container</li>
+                     <li>Manage Docker images and containers</li>
+
+                 </ul>
+                 <h3>Prerequisites</h3>
+                 <p>Before you begin, ensure you have the following:</p>
+                 <ul>
+                    <li><span class="bold">Docker Desktop</span> 
+                        (or Docker Engine for Linux)</li>
+                 <li> <span class="bold">A Terminal/CLI </span> 
+                    (bash, zsh, or PowerShell). </li>
+                    <li> <span class="bold">Basic Command Line Knowledge </span>
+                        (navigating directories and executing scripts).</li>
+                </ul>
+    </section>
+    <section class="main-section" id="project-structure">
+        <header><h2 >Project Structure</h2></header>
+        <p>Before writing any Docker code, it is essential to 
+        organize your application files. A clean 
+        directory ensures that Docker only 
+        copies the files it needs, keeping the final 
+        image small.</p>
+        <p>our project folder should look like this:</p>
+        <article class="code-folder">
+           <p> my-docker-app/</p>
+<p>├── node_modules/       (Generated later)</p>
+<p>├── src/</p>
+<p>│   └── index.js        (Your main app code)</p>
+<p>├── package.json        (Metadata and dependencies)</p>
+<p>├── .dockerignore       (Files to exclude)</p>
+<p>└── Dockerfile          (The build instructions)</p>
+        </article>
+    </section>
+    <section class="main-section" id="creating-a-dockerfile">
+        <header><h2>Creating a Dockerfile</h2></header>
+        <p>A Dockerfile is a text file that 
+            contains a series of instructions 
+            on how to build a Docker image. 
+            Each instruction creates a layer in the image, 
+            and the final image is a combination of all these layers.</p>
+            <p>Create a file named Dockerfile (no extension) and add the following:</p>
+            <p class="code-block code">
+                <code>
+               <p> # Step 1: Use an official base image
+FROM node:18-alpine</p><p>
+
+
+
+# Step 2: Set the working directory inside the container
+WORKDIR /app
+</p>
+<p> 
+# Step 3: Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install
+</p>
+<p>
+# Step 4: Copy the rest of your application code
+COPY . .
+</p>
+<p>
+# Step 5: Expose the port the app runs on
+EXPOSE 3000
+</p>
+<p>
+# Step 6: Define the command to run your app
+CMD ["node", "src/index.js"]
+</p>
+            </code>
+               </p>
+<p>Why use alpine? Alpine is a minimal Linux distribution. 
+    Using node:18-alpine instead of the full node:18 image
+     can reduce your image size from 900MB to about 160MB.</p>               
+    </section>
+    <section class="main-section" id="running-the-container">
+        <header><h2>Running the Container</h2></header>
+        <p>Now that you have an image, you 
+            can launch it as a "container" (a running instance 
+            of that image).</p>
+            <p>Run the following command:</p>
+            <p class="code-block">
+docker run -p 8080:3000 -d --name my-running-app my-first-docker-app
+            </p>
+            <p>Here's what each part of the command does:</p>
+            <ul>
+                <li><span class="bold">-p 8080:3000</span>: Maps port 3000 inside the container to port 8080 on your host machine.</li>
+                <li><span class="bold">-d</span>: Runs the container in detached mode (in the background).</li>
+                <li><span class="bold">--name my-running-app</span>: Assigns a name to the running container for easier management.</li>
+                <li><span class="bold">my-first-docker-app</span>: The name of the image to run.</li>
+            </ul>
+
+    </section>
+    <section class="main-section" id="troubleshooting-&-common-commands">
+        <header><h2>Troubleshooting & Common Commands</h2></header>
+        <p>Documentation isn't complete without a 
+            "cheat sheet" for when things go wrong.</p>
+            <ul>
+                <li><span class="bold">View Running Containers:</span> <code>docker ps</code></li>
+                <li><span class="bold">Stop a Container:</span> <code>docker stop my-running-app</code></li>
+                <li><span class="bold">Remove a Container:</span> <code>docker rm my-running-app</code></li>
+                <li><span class="bold">View Container Logs:</span> <code>docker logs my-running-app</code></li>
+                <li><span class="bold">Rebuild the Image:</span> <code>docker build -t my-first-docker-app .</code></li>
+    </section>
+</main>
+</body>
+</html>
