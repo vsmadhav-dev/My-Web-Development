@@ -86,8 +86,8 @@ Introduction
             Each instruction creates a layer in the image, 
             and the final image is a combination of all these layers.</p>
             <p>Create a file named Dockerfile (no extension) and add the following:</p>
-            <p class="code-block code">
-                <code>
+            <article class="code-block">
+               
                <p> # Step 1: Use an official base image
 FROM node:18-alpine</p><p>
 
@@ -113,8 +113,9 @@ EXPOSE 3000
 # Step 6: Define the command to run your app
 CMD ["node", "src/index.js"]
 </p>
-            </code>
-               </p>
+</article>
+            
+               
 <p>Why use alpine? Alpine is a minimal Linux distribution. 
     Using node:18-alpine instead of the full node:18 image
      can reduce your image size from 900MB to about 160MB.</p>               
